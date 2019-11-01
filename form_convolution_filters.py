@@ -43,6 +43,6 @@ for i in range(0, spx*spy):
     if k == 0:
         plt.ylabel("Relative Weighting")
 
-plt.show()
-
 plt.savefig("figures/form_filters.svg")
+
+plt.show()

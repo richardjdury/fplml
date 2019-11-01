@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0e2b00ec-6848-431a-bf4c-561b0c4607e0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/form_convolution_filters.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fpl/fpl.py" beforeDir="false" afterPath="$PROJECT_DIR$/fpl/fpl.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/form_convolution_filters.py" beforeDir="false" afterPath="$PROJECT_DIR$/form_convolution_filters.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

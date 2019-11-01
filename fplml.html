@@ -1,0 +1,1016 @@
+<!-- CONTENTS ---------------------------------------------------------------->
+<h3>Contents</h3>
+
+<a href="#Introduction"><b>1. Introduction</b></a><br />
+&emsp; <a href="#Introduction_01">1.1 What is Fantasy Football?</a><br />
+&emsp; <a href="#Introduction_02">1.2 Why is FPL a good platform for machine learning?</a><br />
+&emsp; <a href="#Introduction_03">1.3 Tools</a><br />
+
+<a href="#AimsAndObjectives"><b>2. Aims & Objectives</b></a><br />
+&emsp; <a href="#AimsAndObjectives_01">2.1 Primary Aims</a><br />
+&emsp; <a href="#AimsAndObjectives_02">2.2 Secondary Aims Aims</a><br />
+
+<a href="#Rules"><b>3. Rules of the Game</b></a><br />
+&emsp; <a href="#Rules_01">3.1 The Basics</a><br />
+&emsp; <a href="#Rules_02">3.2 Choosing a Squad</a><br />
+&emsp; <a href="#Rules_03">3.3 Week by Week</a><br />
+&emsp; <a href="#Rules_04">3.4 Scoring</a><br />
+&emsp; <a href="#Rules_05">3.5 Chips</a><br />
+
+<a href="#Data"><b>4. Available Data</b></a><br />
+
+<a href="#Labels"><b>5. Labels</b></a><br />
+
+<a href="#FE"><b>6. Feature Engineering</b></a><br />
+&emsp; <a href="#FE_01">6.1 Player Position</a><br />
+&emsp; <a href="#FE_02">6.2 Team & Opposition Team</a><br />
+&emsp; <a href="#FE_03">6.3 Top 6 Team</a><br />
+&emsp; <a href="#FE_04">6.4 Player Value</a><br />
+&emsp; <a href="#FE_05">6.5 Form</a><br />
+
+<br /><br /><br />
+
+<!-- INTRODUCTION ------------------------------------------------------------>
+
+<h3 id="Introduction">1. Introduction</h3>
+
+<h4 id="Introduction_01">1.1 What is Fantasy Football?</h4>
+
+The basic idea of FPL is to predict which footballers in the Premier League will perform well in the real-world, and be rewarded with points if your predictions are correct. The points scored by your players will be added up over the course of the season which allows you to compete with your friends in mini-leagues.
+
+<br /><br />
+
+<h4 id="Introduction_02">1.2 Why is FPL a good platform for machine learning?</h4>
+
+The ultimate question for any FPL manager is “how do I predict which players will do well?”.
+
+People often choose their players for the following week on “gut instinct”, or some mystic metric they’ve come up with which seems to be indescribable to other people. And these mental calculations include the selection’s opposition, whether they play home or away, are they on a winning streak, etc. And often these methods appear to be very effective. Last year, over 6 million people signed up and competed with the dream of winning the league. And whats is interesting is that the same people seem to end up towards the top every season. What do they know that a regular player doesn’t!?
+
+I believe there is something in these “gut feelings” that we have. If we can find a way to boil down our abstract (and most likely, highly complex) mental methods for predicting success into a small set of variables (“<b>features</b>”), we might be able to develop a model for predicting points.
+
+The FPL platform lends itself nicely for these kind of features to be developed due to the open availability of the data and the clean data structures. The data contains numerical and categorical features, and will allow me to develop my handling of both data types. Additionally, the abundance of data (around 650 players to choose from, each playing up to 38 games a season) allows for a robust model to be built.
+
+<br /><br />
+
+<h4 id="Introduction_03">1.3 Tools</h4>
+
+In order to undertake this project I will be using Python 3.7 with additional toolboxes such as Pandas, NumPy, Scikit-Learn and Matplotlib, and employing both Jupyter Notebooks and PyCharm as a working environment.
+
+<br /><br /><br /><br />
+
+<!-- AIMS AND OBJECTIVES ----------------------------------------------------->
+
+<h3 id="AimsAndObjectives">2. Aims & Objectives</h3>
+
+<h4 id="AimsAndObjectives_01">2.1 Primary Aims</h4>
+
+<b>Predict player performance:</b> Ultimately, managers are trying to predict the number of points their chosen players will achieve from their next game. In this project, I hope to use data known before the following game to predict the number of points a player will next receive. This will be performed firstly as a classification where a categorical label is assigned to describe a range of points.
+
+<br /><br />
+
+<b>Engineer additional features:</b> Despite the extensive statistics available from the FPL datasets, there are many factors which may not be explicitly stated but can be calculated from the available data. Such as "how many points did this player achieve on average in their last 3 home games?" or "How many goals does this team concede on average?" The aim is to engineer these additional features in order to help improve the prediction accuracy of the points total and price change.
+
+<br /><br />
+
+<h4 id="AimsAndObjectives_02">2.2 Secondary Aims</h4>
+
+<b>Investigate data trends:</b> There are often many factors that managers take into account when choosing players for their team. I hope to investigate these factors to determine how much power their really is behind these factors. For example, is the home advantage reflected in an individual's points total? Does scoring in the previous game suggest there is more chance to score in the next game?
+
+<br /><br /><br /><br />
+
+<!--- THE RULES -------------------------------------------------------------->
+
+<h3 id="Rules">3. Rules of the Game</h3>
+
+If you are familiar with the rules of Fantasy Premier League, it is probably best to skip the following section.
+
+<br /><br />
+
+<h4 id="Rules_01">3.1 The Basics</h4>
+
+Fantasy Premier League (<b>FPL</b>) is a browser-based game which is based on real-world events from the English Premier League (<b>EPL</b>). The participants of the game ("<b>the managers</b>") must choose a squad of real footballers ("<b>the players</b>") which they believe will perform well through the season. Player performances are quantified into "points", and the manager must accumulate the most possible points over the course of the season.
+
+<br /><br />
+
+<h4 id="Rules_02">3.2 Choosing a Squad</h4>
+
+At the start of the season, managers must choose a squad of 15 players. Each player is assigned a position (Goalkeeper, Defender, Midfielder or Forward), and a price based on their ability. The squad must include:
+
+<ul>
+    <li>No more than 3 players from the same team.</li>
+    <li>Exactly 2 Goalkeepers</li>
+    <li>Exactly 5 Defenders</li>
+    <li>Exactly 5 Midfielders</li>
+    <li>Exactly 3 Forwards</li>
+    <li>A total squad value less than £100m</li>
+</ul>
+
+Before the season begins, managers can change players in their squad freely without penalties. However, after the first deadline there are rules and costs associated with changing players.
+
+<br /><br />
+
+<h4 id="Rules_03">3.3 Week by Week</h4>
+
+The season is divided into 38 rounds ("<b>gameweeks</b>"), each usually containing one fixture for each team. Before each gameweek begins, managers have decisions to make regarding their team.
+
+<ul>
+    <li>Managers must decide on their strongest 11 players from their squad. Only these 11 players can gather points for the managers in the following gameweek. The remaining 4 players are placed on the bench ("<b>subs</b>"). If any of the manager's first 11 don't play, they will be automatically swapped with a sub.</li>
+    <li>Managers must decide on their formation. The starting 11 must contain 1 goalkeeper, at least 3 midfielders and at least 1 forward, allowing for 7 possible formations.</li>
+    <li>The manager must also decide which player will be the "<b>captain</b>", whereby the captain’s points will be doubled in the following gameweek. The manager must also decide on a "<b>vice-captain</b>". In the case that the manager’s captain doesn’t play in real life, the vice-captain’s points will be double instead.</li>
+</ul>
+
+As well as these three compulsory decisions, there are also optional actions that can be performed:
+
+<ul>
+    <li>Managers are able to perform "<b>transfers</b>". A transfer is the action whereby a manager swaps a player in their squad for a different player not in their squad. Managers can make one transfer per week without penalty, provided that there are sufficient funds available. If a manager wishes to make more than one transfer per gameweek, a penalty of 4 points is imposed.</li>
+    <li>Managers can use "chips" which are boosts intended to increase a manager’s points total for that gameweek only. Chips can only be used once per season. The types of chips are discussed later.</li>
+</ul>
+
+<br />
+
+<h4 id="Rules_04">3.4 Scoring</h4>
+
+Actions performed by players in real-life are quantified into points. The points awarded can vary based on a player’s position, for instance a defender is awarded more points for a goal than a forward as it is seen as a bigger achievement.
+
+<br /><br />
+
+<table>
+    <colgroup>
+        <col align="left" width="400pt">
+        </col>
+        <col align="center" width="100pt">
+        </col>
+    </colgroup>
+    <thead>
+        <tr>
+            <th>Action</th>
+            <th>Points</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Played between 1 and 59 minutes</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td>Played 60 minutes or more</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td>Goal scored by a goalkeeper or defender</td>
+            <td>6</td>
+        </tr>
+        <tr>
+            <td>Goal scored by a midfielder</td>
+            <td>5</td>
+        </tr>
+        <tr>
+            <td>Goal scored by a forward</td>
+            <td>4</td>
+        </tr>
+        <tr>
+            <td>Goal assist</td>
+            <td>3</td>
+        </tr>
+        <tr>
+            <td>Clean sheet by a goalkeeper or midfielder</td>
+            <td>4</td>
+        </tr>
+        <tr>
+            <td>Clean sheet by a midfielder</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td>Every 3 shots saved by a goalkeeper</td>
+            <td>1</td>
+        </tr>
+        <tr>
+            <td>Penalty save</td>
+            <td>5</td>
+        </tr>
+        <tr>
+            <td>Penalty miss</td>
+            <td>-2</td>
+        </tr>
+        <tr>
+            <td>Every 2 goals conceded by a goalkeeper or defender</td>
+            <td>-2</td>
+        </tr>
+        <tr>
+            <td>Every 4 goals conceded by a midfielder</td>
+            <td>-1</td>
+        </tr>
+        <tr>
+            <td>Yellow card</td>
+            <td>-1</td>
+        </tr>
+        <tr>
+            <td>Red card</td>
+            <td>-3</td>
+        </tr>
+        <tr>
+            <td>Own goal</td>
+            <td>-2</td>
+        </tr>
+    </tbody>
+</table>
+
+<br /><br />
+
+As well as earning points from the actions above, a player may also be awarded "bonus points" if their overall performance ranks in the top three of all players in that fixtures. This performance is quantified using a separate scoring system, but I won't dive into this. The player with the highest rated performance is given 3 bonus points, second highest gets 2 and third highest gets 1.
+
+<br /><br />
+
+<h4 id="Rules_05">3.5 Chips</h4>
+
+Chips are one-time boosts which be used to potentially increase the points achieved from a gameweek of the managers choice. There are four chips which can be used.
+
+<ul>
+    <li>Bench Boost: The manager will get points from all 15 squad members, rather than just the starting 11.</li>
+    <li>Free Hit: The manager can make an unlimited amount of transfers to their squad for the next gameweek. However, the team will return to its previous state after the gameweek.</li>
+    <li>Triple Captain: Rather than doubling the points of the captain for the next gameweek, the captain will have their points tripled.</li>
+    <li>Wildcard: Make an unlimited number of permanent transfers for the next gameweek. Unlike the free-hit, the Wildcard is permanent.</li>
+</ul>
+
+<br /><br />
+
+<!-- DATA -------------------------------------------------------------------->
+
+<h3 id="Data">4. Available Data</h3>
+
+Data was collected from the FPL API in JSON format. Data for each player was stored in a separate file so was initially combined into a single dataset. The dataset consists of a table which describes player performances from all games in the season. Each column represents a particular player in a particular fixture, and each row represents an in-game statistic such as goals, tackles, offsides, etc. In total there are 21,790 columns and 54 rows. The value of interest in this dataset is the value called “total_points”, which describes the quality of a players performance using the scoring system introduced in the previous section.
+
+<br /><br />
+
+<table>
+    <colgroup>
+        <col width="250pt">
+        </col>
+        <col width="80pt">
+        </col>
+        <col width="80pt">
+        </col>
+        <col width="80pt">
+        </col>
+        <col width="80pt">
+        </col>
+        <col width="80pt">
+        </col>
+        <col width="80pt">
+        </col>
+    </colgroup>
+    <thead>
+        <tr style="text-align: right;">
+            <th></th>
+            <th>0</th>
+            <th>1</th>
+            <th>2</th>
+            <th>3</th>
+            <th>...</th>
+            <th>21789</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>id</td>
+            <td>1</td>
+            <td>526</td>
+            <td>1053</td>
+            <td>1584</td>
+            <td>...</td>
+            <td>21791</td>
+        </tr>
+        <tr>
+            <td>kickoff_time</td>
+            <td>2018-08-12T15:00:00Z</td>
+            <td>2018-08-18T16:30:00Z</td>
+            <td>2018-08-25T14:00:00Z</td>
+            <td>2018-09-02T12:30:00Z</td>
+            <td>...</td>
+            <td>2019-05-12T14:00:00Z</td>
+        </tr>
+        <tr>
+            <td>kickoff_time_formatted</td>
+            <td>12 Aug 16:00</td>
+            <td>18 Aug 17:30</td>
+            <td>25 Aug 15:00</td>
+            <td>02 Sep 13:30</td>
+            <td>...</td>
+            <td>12 May 15:00</td>
+        </tr>
+        <tr>
+            <td>team_h_score</td>
+            <td>0</td>
+            <td>3</td>
+            <td>3</td>
+            <td>2</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>team_a_score</td>
+            <td>2</td>
+            <td>2</td>
+            <td>1</td>
+            <td>3</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>was_home</td>
+            <td>True</td>
+            <td>False</td>
+            <td>True</td>
+            <td>False</td>
+            <td>...</td>
+            <td>False</td>
+        </tr>
+        <tr>
+            <td>round</td>
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+            <td>4</td>
+            <td>...</td>
+            <td>38</td>
+        </tr>
+        <tr>
+            <td><mark>total_points</mark></td>
+            <td>3</td>
+            <td>3</td>
+            <td>3</td>
+            <td>1</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>value</td>
+            <td>50</td>
+            <td>50</td>
+            <td>50</td>
+            <td>50</td>
+            <td>...</td>
+            <td>40</td>
+        </tr>
+        <tr>
+            <td>transfers_balance</td>
+            <td>0</td>
+            <td>188</td>
+            <td>8540</td>
+            <td>9582</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>selected</td>
+            <td>70767</td>
+            <td>90038</td>
+            <td>107301</td>
+            <td>123566</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>transfers_in</td>
+            <td>0</td>
+            <td>6059</td>
+            <td>19550</td>
+            <td>19332</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>transfers_out</td>
+            <td>0</td>
+            <td>5871</td>
+            <td>11010</td>
+            <td>9750</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>loaned_in</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>loaned_out</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>minutes</td>
+            <td>90</td>
+            <td>90</td>
+            <td>90</td>
+            <td>90</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>goals_scored</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>assists</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>clean_sheets</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>goals_conceded</td>
+            <td>2</td>
+            <td>3</td>
+            <td>1</td>
+            <td>2</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>own_goals</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>penalties_saved</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>penalties_missed</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>yellow_cards</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>red_cards</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>saves</td>
+            <td>6</td>
+            <td>8</td>
+            <td>4</td>
+            <td>1</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>bonus</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>bps</td>
+            <td>24</td>
+            <td>26</td>
+            <td>17</td>
+            <td>8</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>influence</td>
+            <td>47.0</td>
+            <td>53.0</td>
+            <td>27.8</td>
+            <td>2.4</td>
+            <td>...</td>
+            <td>0.0</td>
+        </tr>
+        <tr>
+            <td>creativity</td>
+            <td>0.0</td>
+            <td>0.0</td>
+            <td>0.0</td>
+            <td>0.0</td>
+            <td>...</td>
+            <td>0.0</td>
+        </tr>
+        <tr>
+            <td>threat</td>
+            <td>0.0</td>
+            <td>0.0</td>
+            <td>0.0</td>
+            <td>0.0</td>
+            <td>...</td>
+            <td>0.0</td>
+        </tr>
+        <tr>
+            <td>ict_index</td>
+            <td>4.7</td>
+            <td>5.3</td>
+            <td>2.8</td>
+            <td>0.2</td>
+            <td>...</td>
+            <td>0.0</td>
+        </tr>
+        <tr>
+            <td>ea_index</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>open_play_crosses</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>big_chances_created</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>clearances_blocks_interceptions</td>
+            <td>2</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>recoveries</td>
+            <td>9</td>
+            <td>8</td>
+            <td>10</td>
+            <td>8</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>key_passes</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>tackles</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>winning_goals</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>attempted_passes</td>
+            <td>42</td>
+            <td>35</td>
+            <td>24</td>
+            <td>38</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>completed_passes</td>
+            <td>31</td>
+            <td>25</td>
+            <td>20</td>
+            <td>24</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>penalties_conceded</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>big_chances_missed</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>errors_leading_to_goal</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>errors_leading_to_goal_attempt</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>2</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>tackled</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>offside</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>target_missed</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>fouls</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>dribbles</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>...</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td>element</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>...</td>
+            <td>623</td>
+        </tr>
+        <tr>
+            <td>fixture</td>
+            <td>0</td>
+            <td>13</td>
+            <td>20</td>
+            <td>32</td>
+            <td>...</td>
+            <td>374</td>
+        </tr>
+        <tr>
+            <td>opponent_team</td>
+            <td>12</td>
+            <td>5</td>
+            <td>18</td>
+            <td>4</td>
+            <td>...</td>
+            <td>10</td>
+        </tr>
+    </tbody>
+</table>
+
+<br /><br />
+
+As this is a retrospective project, care must be taken when using this dataset as it contains information about the player’s performance in that particular game. If we are trying to predict performance we are not allowed to know what actually happened until the following fixture. Methods of handling this information will be discussed in the feature engineering section. For now, the only data we are allowed to know for each player in a particular fixture is shown in the table below.
+
+<br /><br /><br />
+
+<!-- APPROACH ---------------------------------------------------------------->
+
+<h3 id="Labels">5. Labels</h3>
+
+To first simplify the problem, the total points label will be interpreted as a categorical variable rather than a continuous one. This involved binning the total points variable based on desirable returns for an FPL manager. Shown below in the category given to the points ranges:
+
+<br /><br />
+
+<table>
+    <tr>
+        <th>Points Range</th>
+        <th>Category Name</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>&lt; 1</td>
+        <td>Poor</td>
+        <td>Didn’t play for a sufficient time, or did play and lost points.</td>
+    </tr>
+    <tr>
+        <td>1-3</td>
+        <td>Average</td>
+        <td>Played a full 90 minutes but didn’t perform any actions worth points.</td>
+    </tr>
+    <tr>
+        <td>4-7</td>
+        <td>Good</td>
+        <td>Played a full 90 mins and performed one action worth points.</td>
+    </tr>
+    <tr>
+        <td>&gt;7</td>
+        <td>Excellent</td>
+        <td>Played a full 90 mins and performed numerous actions worth points.</td>
+    </tr>
+</table>
+
+<br /><br />
+
+As development proceeds with this model and important predictive features are found, I will begin to increase the number of categories or treat this a regression problem. But for now, 4 categories are sufficient.
+
+<br /><br /><br />
+
+<h3 id="FE">6. Feature Engineering</h3>
+
+<h4 id="FE_01">Player Position</h4>
+
+A player’s position is likely to contribute towards their potential score as points are awarded differently for different positions and are likely to perform different in-game actions (i.e. a striker is more likely to score a goal than a defender). In FPL, there are 4 possible positions a player can take: Goalkeeper, Defender, Midfielder and Forward. In order to incorporate this, One Hot encoding will be used to describe this categorical data.
+
+<br /><br />
+
+<table>
+    <tr>
+        <th></th>
+        <th>0</th>
+        <th>1</th>
+        <th>2</th>
+        <th>3</th>
+        <th>...</th>
+        <th>21789</th>
+    </tr>
+    <tr>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+    </tr>
+    <tr>
+        <td>GKP</td>
+        <td>TRUE</td>
+        <td>TRUE</td>
+        <td>TRUE</td>
+        <td>TRUE</td>
+        <td>...</td>
+        <td>FALSE</td>
+    </tr>
+    <tr>
+        <td>DEF</td>
+        <td>FALSE</td>
+        <td>FALSE</td>
+        <td>FALSE</td>
+        <td>FALSE</td>
+        <td>...</td>
+        <td>FALSE</td>
+    </tr>
+    <tr>
+        <td>MID</td>
+        <td>FALSE</td>
+        <td>FALSE</td>
+        <td>FALSE</td>
+        <td>FALSE</td>
+        <td>...</td>
+        <td>TRUE</td>
+    </tr>
+    <tr>
+        <td>FWD</td>
+        <td>FALSE</td>
+        <td>FALSE</td>
+        <td>FALSE</td>
+        <td>FALSE</td>
+        <td>...</td>
+        <td>FALSE</td>
+    </tr>
+</table>
+
+<br /><br />
+
+<h4 id="FE_02">6.2 Team & Opposition Team</h4>
+
+A player’s team and their opposition could contribute towards their potential points total. Playing for a good team could increase the possible points total, whereas playing against a good team could decrease the potential points total. One Hot encoding will be used to describe the player’s team and the opposition which will result in 40 additional columns. These will be reduced later on using feature selection methods.
+
+<br /><br />
+
+<table>
+    <tr>
+        <th></th>
+        <th>0</th>
+        <th>1</th>
+        <th>2</th>
+        <th>3</th>
+        <th>...</th>
+        <th>21789</th>
+    </tr>
+    <tr>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+    </tr>
+    <tr>
+        <td>team_ARS</td>
+        <td>TRUE</td>
+        <td>TRUE</td>
+        <td>TRUE</td>
+        <td>TRUE</td>
+        <td>...</td>
+        <td>FALSE</td>
+    </tr>
+    <tr>
+        <td>team_BOU</td>
+        <td>FALSE</td>
+        <td>FALSE</td>
+        <td>FALSE</td>
+        <td>FALSE</td>
+        <td>...</td>
+        <td>FALSE</td>
+    </tr>
+    <tr>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+    </tr>
+    <tr>
+        <td>opponent_team_ARS</td>
+        <td>FALSE</td>
+        <td>FALSE</td>
+        <td>FALSE</td>
+        <td>FALSE</td>
+        <td>...</td>
+        <td>FALSE</td>
+    </tr>
+    <tr>
+        <td>opponent_team_BOU</td>
+        <td>FALSE</td>
+        <td>FALSE</td>
+        <td>FALSE</td>
+        <td>FALSE</td>
+        <td>...</td>
+        <td>FALSE</td>
+    </tr>
+    <tr>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+    </tr>
+</table>
+
+<br /><br />
+
+<h4 id="FE_03">6.3 Top 6 Team</h4>
+
+A boolean to describe whether the player is playing for or against a team in the traditional top 6 teams (Arsenal, Chelsea, Manchester United, Manchester City, Liverpool, Tottenham Hotspurs).
+
+<br /><br />
+
+<table>
+    <tr>
+        <th></th>
+        <th>0</th>
+        <th>1</th>
+        <th>2</th>
+        <th>3</th>
+        <th>...</th>
+        <th>21789</th>
+    </tr>
+    <tr>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+    </tr>
+    <tr>
+        <td>top_6_team</td>
+        <td>TRUE</td>
+        <td>TRUE</td>
+        <td>TRUE</td>
+        <td>TRUE</td>
+        <td>...</td>
+        <td>FALSE</td>
+    </tr>
+    <tr>
+        <td>opponent_top_6_team</td>
+        <td>TRUE</td>
+        <td>TRUE</td>
+        <td>FALSE</td>
+        <td>FALSE</td>
+        <td>...</td>
+        <td>FALSE</td>
+    </tr>
+</table>
+
+<br /><br />
+
+<h4 id="FE_04">6.4 Player Value</h4>
+
+Player’s with a high value have either accumulated a lot of points in the previous season, or are expected to accumulate a lot of points. Therefore, this value could be a predictor of those players who are likely to achieve big scores and will be included as a factor in the model. This price may change week to week depending on how well they are actually performing. A price drop suggests that they are not living up to their potential and a price increase suggests they are over achieving, so keeping track of price changes may also be a useful feature.
+
+<br /><br />
+
+<h4 id="FE_05">6.5 Form</h4>
+
+Form is a summary of how well a player has been performing in their previous games. When calculating form, factors to be considered are how many previous games are being summarised and how they are weighted. In order to easily manipulate this, a particular statistic from a player’s previous performances can be sorted in chronological order and a convolution can be performed using a kernel specifically designed to produce a weighted average from previous games. An example of the convolution kernel used to average the previous 2 games is shown below. This approach allows the form calculation to be easily changed to have a gaussian response or some other distribution.

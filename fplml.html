@@ -27,6 +27,10 @@
 &emsp; <a href="#FE_03">6.3 Top 6 Team</a><br />
 &emsp; <a href="#FE_04">6.4 Player Value</a><br />
 &emsp; <a href="#FE_05">6.5 Form</a><br />
+&emsp; <a href="#FE_06">6.6 Played in Previous Game</a><br />
+&emsp; <a href="#FE_07">6.7 Points per Minute</a><br />
+&emsp; <a href="#FE_08">6.8 Expected Points</a><br />
+&emsp; <a href="#FE_09">6.9 Points Contribution to Team</a><br />
 
 <br /><br /><br />
 
@@ -766,7 +770,7 @@ As this is a retrospective project, care must be taken when using this dataset a
 
 <br /><br /><br />
 
-<!-- APPROACH ---------------------------------------------------------------->
+<!-- LABELS ---------------------------------------------------------------->
 
 <h3 id="Labels">5. Labels</h3>
 
@@ -807,6 +811,8 @@ To first simplify the problem, the total points label will be interpreted as a c
 As development proceeds with this model and important predictive features are found, I will begin to increase the number of categories or treat this a regression problem. But for now, 4 categories are sufficient.
 
 <br /><br /><br />
+
+<!-- FEATURE ENGINEERING ----------------------------------------------------->
 
 <h3 id="FE">6. Feature Engineering</h3>
 
@@ -1014,3 +1020,145 @@ Player’s with a high value have either accumulated a lot of points in the prev
 <h4 id="FE_05">6.5 Form</h4>
 
 Form is a summary of how well a player has been performing in their previous games. When calculating form, factors to be considered are how many previous games are being summarised and how they are weighted. In order to easily manipulate this, a particular statistic from a player’s previous performances can be sorted in chronological order and a convolution can be performed using a kernel specifically designed to produce a weighted average from previous games. An example of the convolution kernel used to average the previous 2 games is shown below. This approach allows the form calculation to be easily changed to have a gaussian response or some other distribution.
+
+<br /><br />
+
+<center>
+    <img src="https://raw.githubusercontent.com/richardjdury/fplml/master/figures/form_filters.svg?sanitize=true" width="700px" />
+</center>
+
+<br />
+
+Form can be considered on multiple statistics and not just the total number of points achieved. Also included could be the number of minutes, a player’s “threat” rating, number of managers that have brought them into their team or their bonus points rating. All these can be quickly calculated and added to the dataset.
+
+<br /><br />
+
+<h4 id="FE_06">6.6 Played in Previous Game</h4>
+
+A simple Boolean to describe whether a player featured in their teams last game. Not playing in the previous game may suggest that they have fallen out of favour with the manager and are unlikely to feature in the next game.
+
+<br /><br />
+
+<h4 id="FE_07">6.7 Points per Minute</h4>
+
+This is simply a division of total points divided by the number of minutes played on a game-by-game basis.
+
+<br /><br />
+
+<h4 id="FE_08">6.8 Expected Points</h4>
+
+This is the form calculation on the total points per minute multiplied by the form calculation on minutes.
+
+<br /><br />
+
+<h4 id="FE_09">6.9 Points Contribution to Team</h4>
+
+This is the percentage of points that an individual’s total contributed to the team’s total. A higher contribution suggests that a player is more likely to be the outlet for goals or assists.
+
+<br /><br />
+
+<h4 id="FE_10">6.10 Category Frequency</h4>
+These features describe how often the player has achieved each label. This takes into account all previous games and is updated after every game.
+
+<br /><br />
+
+<table>
+    <tr>
+        <th></th>
+        <th>0</th>
+        <th>1</th>
+        <th>2</th>
+        <th>3</th>
+        <th>...</th>
+        <th>21789</th>
+    </tr>
+    <tr>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+        <td>...</td>
+    </tr>
+    <tr>
+        <td>Poor_freq</td>
+        <td>0.00</td>
+        <td>0.00</td>
+        <td>0.00</td>
+        <td>0.00</td>
+        <td>...</td>
+        <td>0.00</td>
+    </tr>
+    <tr>
+        <td>Average_freq</td>
+        <td>0.00</td>
+        <td>1.00</td>
+        <td>1.00</td>
+        <td>1.00</td>
+        <td>...</td>
+        <td>0.00</td>
+    </tr>
+    <tr>
+        <td>Good_freq</td>
+        <td>0.00</td>
+        <td>0.00</td>
+        <td>0.00</td>
+        <td>0.00</td>
+        <td>...</td>
+        <td>0.00</td>
+    </tr>
+    <tr>
+        <td>Excellent_freq</td>
+        <td>0.00</td>
+        <td>0.00</td>
+        <td>0.00</td>
+        <td>0.00</td>
+        <td>...</td>
+        <td>0.00</td>
+    </tr>
+</table>
+
+<br /><br /><br />
+
+<h3 id="ModelBuilding">7. Model Building</h3>
+
+<h4 id="ModelBuilding_01">7.1 Test-Train Split</h4>
+
+Before applying a model to classify this data, it needs to be split into a training and test dataset. Before splitting the data, it is important to assess the amount of each label category present in the data. Presented below is the counts for each points category.
+
+<br /><br />
+
+<table>
+    <tr>
+        <th>Category</th>
+        <th>Counts</th>
+        <th>% of all data</th>
+    </tr>
+    <tr>
+        <td>Poor</td>
+        <td>11924</td>
+        <td>54.7%</td>
+    </tr>
+    <tr>
+        <td>Average</td>
+        <td>7247</td>
+        <td>33.3%</td>
+    </tr>
+    <tr>
+        <td>Good</td>
+        <td>1958</td>
+        <td>9.0%</td>
+    </tr>
+    <tr>
+        <td>Excellent</td>
+        <td>661</td>
+        <td>3.0%</td>
+    </tr>
+</table>
+
+<br /><br />
+
+It can be seen that the categories of imbalanced, with the most popular category (Poor) accounting for 54.7% of the data and the least common (Excellent) accounting for 3.0% of the data. There are numerous ways that this can be accounted for, but as there is already an abundance of data balanced subsampling will initially be used to make the prevalence of each class equal. Then a stratified shuffle split will be used to split the data into training and testing datasets.
+
+<br /><br />

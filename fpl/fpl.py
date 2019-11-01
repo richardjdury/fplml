@@ -271,6 +271,8 @@ def add_opponent_team_league_form(pp, fixture_id, was_home, team_league_form):
 
 # endregion
 
+# region Add Opponent Team Points
+
 def add_opponent_team_points_form(pp, fixture_id, was_home, team_points_form):
 
     opponent_team_points_form = np.zeros(len(pp), dtype="float")
@@ -293,6 +295,44 @@ def add_opponent_team_points_form(pp, fixture_id, was_home, team_points_form):
 
 # endregion
 
+# region Previous Label Frequency
+
+def previous_label_frequency(pp, labels, player_id, label_names):
+
+    player_id_unique = np.unique(player_id)
+
+    unique_labels = np.unique(labels)
+
+    n_unique_labels = len(unique_labels)
+
+    label_count = np.zeros((len(pp), n_unique_labels))
+
+    count = -1
+
+    for j in unique_labels:
+
+        count = count + 1
+
+        for i in player_id_unique:
+            player_col = labels.loc[player_id == i]
+            player_index = player_col.index
+            player_values = player_col.values
+
+            player_col[str(j) + "_count"] = shift_float((player_col==j).cumsum().values, 1)
+            label_count[list(player_index), count] = \
+                player_col[str(j) + "_count"]
+
+    row_sum = np.sum(label_count, 1)
+    label_frequency = label_count / row_sum[:, np.newaxis]
+
+    label_frequency = np.nan_to_num(label_frequency)
+
+    pp[[s + "_freq" for s in label_names]] = pd.DataFrame(label_frequency)
+
+    return pp
+
+
+# endregion
 
 """
 EXTRA FUNCTIONS
@@ -316,9 +356,9 @@ def norm_pdf(x, mu, sigma):
 
 def shift_float(xs, n):
     if n >= 0:
-        return np.concatenate((np.full(n, xs[0]), xs[:-n]))
+        return np.concatenate((np.full(n, 0), xs[:-n]))
     else:
-        return np.concatenate((xs[-n:], np.full(-n, xs[-1])))
+        return np.concatenate((xs[-n:], np.full(-n, 0)))
 
 
 def shift_bool(xs, n):

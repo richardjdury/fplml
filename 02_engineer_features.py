@@ -13,6 +13,8 @@ pandas_display_width = 150
 pd.set_option("display.width", pandas_display_width)
 pd.set_option("display.max_columns", None)
 
+np.seterr(divide='ignore', invalid='ignore')
+
 # endregion
 
 # region Read Data
@@ -23,6 +25,18 @@ players = fpl.read_players()
 pp = fpl.read_pp()
 
 pp_prepared = pd.DataFrame()
+
+# endregion
+
+# region Categorical labels
+
+label_values = [1, 2, 3, 4]
+label_names = ["Poor", "Average", "Good", "Excellent"]
+
+labels_cat = pd.cut(
+    pp["total_points"],
+    bins=[-np.inf, 0.5, 3.5, 7.5, np.inf],
+    labels=label_values)
 
 # endregion
 
@@ -45,7 +59,7 @@ pp["total_points_per_minute"] = (pp["total_points"] / pp["minutes"]).fillna(0)
 # region Add player's team
 
 pp = fpl.add_team(pp, pp["fixture"], pp["was_home"], False)
-#pp_prepared = fpl.add_team(pp_prepared, pp["fixture"], pp["was_home"], True)
+pp_prepared = fpl.add_team(pp_prepared, pp["fixture"], pp["was_home"], True)
 
 # endregion
 
@@ -61,8 +75,8 @@ pp_prepared["opponent_team_top_6"] = pd.Series(
 
 # region Add player's opponent team
 
-#pp_prepared = fpl.add_opponent_team(pp_prepared, pp["fixture"],
-#                                    pp["was_home"], True)
+pp_prepared = fpl.add_opponent_team(pp_prepared, pp["fixture"],
+                                    pp["was_home"], True)
 
 # endregion
 
@@ -96,6 +110,12 @@ pp = fpl.add_player_points_contribution(pp, pp["team"],
 # region Add Team League Points
 
 pp = fpl.add_team_league_points(pp, pp["fixture"], pp["was_home"])
+
+# endregion
+
+# region Add Category Frequency
+
+pp_prepared = fpl.previous_label_frequency(pp_prepared, labels_cat, pp["id"], label_names)
 
 # endregion
 
@@ -153,8 +173,7 @@ pp_prepared = pp_prepared.drop(columns=["total_points_per_minute_form",
 
 pp_prepared = fpl.add_opponent_team_league_form(pp_prepared, pp["fixture"],
                                                 pp["was_home"], pp_prepared[
-
-                                                    "team_league_points_form"])
+                                                   "team_league_points_form"])
 
 pp_prepared["team_form_difference"] = pp_prepared["team_league_points_form"]\
                                       - pp_prepared[
@@ -170,18 +189,6 @@ pp_prepared = fpl.add_opponent_team_points_form(pp_prepared, pp["fixture"],
 
 pp_prepared["team_total_points_difference"] = pp_prepared[
     "team_total_points_form"]-pp_prepared["opponent_team_total_points_form"]
-
-# endregion
-
-# region Categorical labels
-
-label_values = [1, 2, 3, 4]
-label_names = ["Poor", "Average", "Good", "Excellent"]
-
-labels_cat = pd.cut(
-    pp["total_points"],
-    bins=[-np.inf, 0.5, 3.5, 7.5, np.inf],
-    labels=label_values)
 
 # endregion
 

@@ -35,10 +35,11 @@ for i in range(0, spx*spy):
     ax[j, k].title.set_size(8)
 
     plt.sca(ax[j, k])
+
     if j == (spy-1):
         plt.xticks(range(11))
     else:
-        plt.xticks([])
+        plt.xticks(range(11), labels=[])
 
     if k == 0:
         plt.ylabel("Relative Weighting")

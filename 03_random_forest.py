@@ -57,6 +57,11 @@ elif label_type == "reg":
 
 # endregion
 
+# region Remove players with no minutes
+
+
+# endregion
+
 # region Scale Numerical Data
 
 num_cols = pp.columns[pp.dtypes.apply(lambda c: np.issubdtype(c, np.number))]
@@ -72,7 +77,7 @@ corr_matrix = pp.corr().abs()
 upper = corr_matrix.where(
     np.triu(np.ones(corr_matrix.shape), k=1).astype(np.bool))
 
-to_drop = [column for column in upper.columns if any(upper[column] > 0.85)]
+to_drop = [column for column in upper.columns if any(upper[column] > 0.80)]
 
 pp = pp.drop(pp[to_drop], axis=1)
 
@@ -83,13 +88,15 @@ pp = pp.drop(pp[to_drop], axis=1)
 pp_balanced, labels_balanced, pp_remaining, labels_remaining = \
     balanced_subsample(pp, labels, random_state=random_state)
 
+print(len(pp_balanced))
+
 # endregion
 
 # region Test Train Split
 
 if label_type == "cat":
 
-    split = StratifiedShuffleSplit(n_splits=10, test_size=0.25,
+    split = StratifiedShuffleSplit(n_splits=1, test_size=0.25,
                                    random_state=random_state)
 
     for train_index, test_index in split.split(pp_balanced.values,
@@ -123,9 +130,8 @@ if label_type == "cat":
 
     classifier = RandomForestClassifier(n_estimators=1000,
                                         random_state=random_state,
-                                        max_depth=5,
-                                        max_features=10,
-                                        min_samples_leaf=5)
+                                        max_depth=7,
+                                        max_features=7)
 
     # endregion
 
@@ -133,11 +139,13 @@ if label_type == "cat":
 
     classifier.fit(X_train, Y_train.ravel())
 
-    plt.figure(figsize=(12, 12))
-    plt.subplot(2, 2, 2)
+    plt.figure(figsize=(8, 12))
+    ax = plt.gca()
+    ax.set_position([0.35, 0.05, 0.60, 0.9])
+
     importance = classifier.feature_importances_
     importance = pd.DataFrame(importance, index=pp.columns,
-                              columns=["Importance"])
+                              columns=["Importance"]).sort_values(by=["Importance"])
 
     importance["Std"] = np.std([tree.feature_importances_
                                 for tree in classifier.estimators_], axis=0)
@@ -145,8 +153,11 @@ if label_type == "cat":
     x = range(importance.shape[0])
     y = importance.iloc[:, 0]
     yerr = importance.iloc[:, 1]
-    plt.barh(pp.columns, y, xerr=yerr, align="center")
-    plt.xlabel("Importance")
+    plt.barh(importance.index, y, align="center")
+    plt.xlabel("Relative Feature Importance")
+    ax.xaxis.grid(True)
+    ax.set_axisbelow(True)
+    plt.title("Random Forest Feature Importance")
 
     # endregion
 
@@ -177,7 +188,8 @@ if label_type == "cat":
     train_cm_df = pd.DataFrame(train_cm, index=label_names,
                                columns=label_names)
 
-    plt.subplot(2, 2, 3)
+    plt.figure(figsize=(12, 5))
+    plt.subplot(1, 2, 1)
     sn.heatmap(train_cm_df, annot=True, fmt="d", robust=True)
     plt.ylim(-0.5, 4.5)
     plt.xlim(-0.5, 4.5)
@@ -185,7 +197,7 @@ if label_type == "cat":
     plt.xlabel('Predicted label')
     plt.title("Training")
 
-    plt.subplot(2, 2, 4)
+    plt.subplot(1, 2, 2)
     test_cm = confusion_matrix(Y_test, test_predictions)
     test_cm_df = pd.DataFrame(test_cm, index=label_names,
                               columns=label_names)

@@ -302,7 +302,6 @@ EXTRA FUNCTIONS
 
 import math
 
-
 def norm_pdf(x, mu, sigma):
     if np.isinf(sigma):
         return np.ones(len(x), dtype="float") * (1 / len(x))

@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 
-plt.rcParams.update({'font.size': 8})
+plt.rcParams.update({'font.size': 10})
 
 def norm_pdf(x, mu, sigma):
     if np.isinf(sigma):
@@ -32,14 +32,9 @@ for i in range(0, spx*spy):
 
     ax[j, k].title.set_text("games: " + str(n_games[i]) + ", sigma: " + str(
         sigma[i]))
-    ax[j, k].title.set_size(8)
+    ax[j, k].title.set_size(10)
 
     plt.sca(ax[j, k])
-
-    if j == (spy-1):
-        plt.xticks(range(11))
-    else:
-        plt.xticks(range(11), labels=[])
 
     if k == 0:
         plt.ylabel("Relative Weighting")

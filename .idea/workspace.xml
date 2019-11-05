@@ -2,15 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0e2b00ec-6848-431a-bf4c-561b0c4607e0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/02_engineer_features.py" beforeDir="false" afterPath="$PROJECT_DIR$/02_engineer_features.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/03_random_forest.py" beforeDir="false" afterPath="$PROJECT_DIR$/03_random_forest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/99_testing_scripts.py" beforeDir="false" afterPath="$PROJECT_DIR$/99_testing_scripts.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/csv/pp_prepared.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/csv/pp_prepared.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/figures/form_filters.svg" beforeDir="false" afterPath="$PROJECT_DIR$/figures/form_filters.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/form_convolution_filters.py" beforeDir="false" afterPath="$PROJECT_DIR$/form_convolution_filters.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fpl/fpl.py" beforeDir="false" afterPath="$PROJECT_DIR$/fpl/fpl.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/fplml.html" beforeDir="false" afterPath="$PROJECT_DIR$/fplml.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -53,7 +46,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.03_random_forest">
+  <component name="RunManager" selected="Python.form_convolution_filters">
     <configuration name="02_engineer_features" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="fpl" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -161,11 +154,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.form_convolution_filters" />
         <item itemvalue="Python.03_random_forest" />
         <item itemvalue="Python.99_testing_scripts" />
         <item itemvalue="Python.02_engineer_features" />
         <item itemvalue="Python.04_points_category_investigate" />
-        <item itemvalue="Python.form_convolution_filters" />
       </list>
     </recent_temporary>
   </component>
@@ -187,7 +180,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>

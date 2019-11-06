@@ -39,6 +39,11 @@
 <a href="#ModelBuilding"><b>7. Model Building</b></a><br />
 &emsp; <a href="#ModelBuilding_01">7.1 Test-Train Split</a><br />
 &emsp; <a href="#ModelBuilding_02">7.2 Model Selection</a><br />
+<<<<<<< HEAD
+=======
+
+<a href="#Results"><b>8. Results</b></a><br />
+>>>>>>> 65cbdec7b6f082e45b3f987e5d8f31b6716f23da
 
 <br /><br /><br />
 
@@ -1157,6 +1162,13 @@ Before applying a model to classify this data, it needs to be split into a train
         <td>Good</td>
         <td>1690</td>
         <td>7.7%</td>
+<<<<<<< HEAD
+    </tr>
+    <tr>
+        <td>Excellent</td>
+        <td>929</td>
+        <td>4.2%</td>
+=======
     </tr>
     <tr>
         <td>Excellent</td>
@@ -1167,6 +1179,102 @@ Before applying a model to classify this data, it needs to be split into a train
 
 <br /><br />
 
+It can be seen that the categories of imbalanced, with the most popular category (Poor) accounting for 54.7% of the data and the least common (Excellent) accounting for 4.2% of the data. There are numerous ways that this can be accounted for, but as there is already an abundance of data balanced subsampling will initially be used to make the prevalence of each class equal. This results in a total of 3716 samples, with each label having 929 samples. Then a stratified shuffle split will be used to split the data into training and testing datasets with a 75/25 split.
+
+<br /><br />
+
+<h4 id="ModelBuilding_02">7.2 Model Selection</h4>
+
+Classification was performed using the Random Forest Classifier from the scikit-learn package. There are a few reason why the Random Forest algorithm was chosen. This model allows features to be both numerical and categorical, and the numerical values don't need transforming in order to work. This makes the model easy to work with and can handle any additional features included at a later date without any extra work. Also, it is simple to measure the relative importance of each feature which allows the model to be interpreted much more easily than other algorithms.
+
+<br /><br />
+
+<pre>
+RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
+                       max_depth=7, max_features=7, max_leaf_nodes=None,
+                       min_impurity_decrease=0.0, min_impurity_split=None,
+                       min_samples_leaf=1, min_samples_split=2,
+                       min_weight_fraction_leaf=0.0, n_estimators=1000,
+                       n_jobs=None, oob_score=False, random_state=42, verbose=0,
+                       warm_start=False)
+</pre>
+
+<br /><br /><br />
+
+<h3 id="Results">8. Results</h3>
+
+<h4 id="Results-01">8.1 Classification Accuracy</h4>
+
+As expected, the dummy classifier achieved an accuracy of 25% when the most common label was predicted. The classifier on the training data set achieved an accuracy of 66%, with the "Poor" labelled being most accuractely predicted (79%).
+
+<br /><br />
+
+<table>
+    <tr>
+        <th></th>
+        <th>Precision</th>
+        <th>Recall</th>
+        <th>f1-Score</th>
+        <th>Support</th>
+    </tr>
+    <tr>
+        <td>Poor</td>
+        <td>0.79</td>
+        <td>0.76</td>
+        <td>0.78</td>
+        <td>725</td>
+    </tr>
+    <tr>
+        <td>Average</td>
+        <td>0.61</td>
+        <td>0.61</td>
+        <td>0.61</td>
+        <td>696</td>
+    </tr>
+    <tr>
+        <td>Good</td>
+        <td>0.59</td>
+        <td>0.61</td>
+        <td>0.60</td>
+        <td>684</td>
+    </tr>
+    <tr>
+        <td>Excellent</td>
+        <td>0.64</td>
+        <td>0.65</td>
+        <td>0.64</td>
+        <td>682</td>
+    </tr>
+    <tr>
+        <td>Accuracy</td>
+        <td></td>
+        <td></td>
+        <td>0.66</td>
+        <td>2787</td>
+    </tr>
+    <tr>
+        <td>Macro Average</td>
+        <td>0.66</td>
+        <td>0.66</td>
+        <td>0.66</td>
+        <td>2787</td>
+>>>>>>> 65cbdec7b6f082e45b3f987e5d8f31b6716f23da
+    </tr>
+    <tr>
+        <td>Weighted Average</td>
+        <td>0.66</td>
+        <td>0.66</td>
+        <td>0.66</td>
+        <td>2787<br></td>
+    </tr>
+    <caption>
+        Training classification report.
+    </caption>
+</table>
+
+<br /><br />
+
+<<<<<<< HEAD
 It can be seen that the categories of imbalanced, with the most popular category (Poor) accounting for 54.7% of the data and the least common (Excellent) accounting for 4.2% of the data. There are numerous ways that this can be accounted for, but as there is already an abundance of data balanced subsampling will initially be used to make the prevalence of each class equal. This results in a total of 3716 samples, with each label having 929 samples. Then a stratified shuffle split will be used to split the data into training and testing datasets with a 75/25 split.
 
 <br /><br />
@@ -1190,3 +1298,68 @@ RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
 <br/><br/>
 
 
+=======
+<table>
+    <tr>
+        <th></th>
+        <th>Precision</th>
+        <th>Recall</th>
+        <th>f1-Score</th>
+        <th>Support</th>
+    </tr>
+    <tr>
+        <td>Poor</td>
+        <td>0.81</td>
+        <td>0.77</td>
+        <td>0.79</td>
+        <td>244</td>
+    </tr>
+    <tr>
+        <td>Average</td>
+        <td>0.48</td>
+        <td>0.50</td>
+        <td>0.49</td>
+        <td>221</td>
+    </tr>
+    <tr>
+        <td>Good</td>
+        <td>0.43</td>
+        <td>0.45</td>
+        <td>0.44</td>
+        <td>221</td>
+    </tr>
+    <tr>
+        <td>Excellent</td>
+        <td>0.50</td>
+        <td>0.47</td>
+        <td>0.48</td>
+        <td>243</td>
+    </tr>
+    <tr>
+        <td>Accuracy</td>
+        <td></td>
+        <td></td>
+        <td>0.55</td>
+        <td>929</td>
+    </tr>
+    <tr>
+        <td>Macro Average</td>
+        <td>0.55</td>
+        <td>0.55</td>
+        <td>0.55</td>
+        <td>929</td>
+    </tr>
+    <tr>
+        <td>Weighted Average</td>
+        <td>0.55</td>
+        <td>0.55</td>
+        <td>0.55</td>
+        <td>929</td>
+    </tr>
+    <caption>
+        Test classification report.
+    </caption>
+</table>
+
+<br/><br/>
+>>>>>>> 65cbdec7b6f082e45b3f987e5d8f31b6716f23da

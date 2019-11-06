@@ -170,10 +170,15 @@ if label_type == "cat":
     yerr = importance.iloc[:, 1]
     plt.barh(importance.index, y, align="center")
     plt.xlabel("Relative Feature Importance")
+    plt.yticks(fontsize=8)
     ax.xaxis.grid(True)
     ax.set_axisbelow(True)
     plt.title("Random Forest Feature Importance")
+<<<<<<< HEAD
     plt.savefig("figures/feature_importance.svg", transparent=True)
+=======
+    plt.savefig("figures/feature_importance.svg")
+>>>>>>> 65cbdec7b6f082e45b3f987e5d8f31b6716f23da
 
     # endregion
 
@@ -184,7 +189,7 @@ if label_type == "cat":
     training_error = np.sum(train_predictions == Y_train.ravel()) / len(
         X_train)
 
-    print(classification_report(train_predictions, Y_train))
+    print(classification_report(train_predictions, Y_train, target_names=label_names))
 
     # endregion
 
@@ -194,7 +199,7 @@ if label_type == "cat":
 
     test_error = np.sum(test_predictions == Y_test.ravel()) / len(X_test)
 
-    print(classification_report(test_predictions, Y_test))
+    print(classification_report(test_predictions, Y_test, target_names=label_names))
 
     # endregion
 
@@ -223,6 +228,7 @@ if label_type == "cat":
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
     plt.title("Test")
+    plt.savefig("figures/confusion_matrix.svg")
 
     plt.savefig("figures/confusion_matrix.svg", transparent=True)
 

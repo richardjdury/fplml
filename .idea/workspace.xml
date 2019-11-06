@@ -2,10 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0e2b00ec-6848-431a-bf4c-561b0c4607e0" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/03a_random_forest_rfecv.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/03a_random_forest_rfecv_yellowbrick.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/03_random_forest.py" beforeDir="false" afterPath="$PROJECT_DIR$/03_random_forest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/99_testing_scripts.py" beforeDir="false" afterPath="$PROJECT_DIR$/99_testing_scripts.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/figures/confusion_matrix.svg" beforeDir="false" afterPath="$PROJECT_DIR$/figures/confusion_matrix.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/figures/feature_importance.svg" beforeDir="false" afterPath="$PROJECT_DIR$/figures/feature_importance.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/form_filters.svg" beforeDir="false" afterPath="$PROJECT_DIR$/figures/form_filters.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/form_convolution_filters.py" beforeDir="false" afterPath="$PROJECT_DIR$/form_convolution_filters.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fplml.html" beforeDir="false" afterPath="$PROJECT_DIR$/fplml.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -31,6 +37,9 @@
     <property name="settings.editor.selected.configurable" value="preferences.sourceCode" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/" />
     </key>
@@ -47,28 +56,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.03_random_forest">
-    <configuration name="02_engineer_features" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="fpl" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/02_engineer_features.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Python.form_convolution_filters">
     <configuration name="03_random_forest" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="fpl" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -90,7 +78,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="04_points_category_investigate" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="03a_random_forest_rfecv" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="fpl" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -102,7 +90,28 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/04_points_category_investigate.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/03a_random_forest_rfecv.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="03a_random_forest_rfecv_yellowbrick" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="fpl" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/03a_random_forest_rfecv_yellowbrick.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -155,11 +164,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.03_random_forest" />
         <item itemvalue="Python.form_convolution_filters" />
-        <item itemvalue="Python.form_convolution_filters" />
+        <item itemvalue="Python.03a_random_forest_rfecv" />
         <item itemvalue="Python.99_testing_scripts" />
-        <item itemvalue="Python.02_engineer_features" />
+        <item itemvalue="Python.03a_random_forest_rfecv_yellowbrick" />
+        <item itemvalue="Python.03_random_forest" />
       </list>
     </recent_temporary>
   </component>

@@ -4,27 +4,23 @@ from fpl import fpl
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import StratifiedShuffleSplit
-from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from scipy.stats import mode
 import matplotlib.pyplot as plt
-from sklearn.feature_selection import RFE
+from yellowbrick.model_selection import RFECV
+from sklearn.model_selection import StratifiedKFold
 import seaborn as sn
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 from sklearn.preprocessing import MinMaxScaler
 import random
-from sklearn.naive_bayes import GaussianNB
 from balanced_subsample import balanced_subsample
-from collections import Counter
-from sklearn.linear_model import LogisticRegressionCV
-from sklearn.linear_model import SGDClassifier
+
 
 random_state = 42
 np.random.seed(random_state)
 random.seed(random_state)
 my_dpi = 192
-from sklearn.feature_selection import SelectFromModel
 
 
 # region Script Settings
@@ -143,47 +139,30 @@ if label_type == "cat":
                                         oob_score=False,
                                         random_state=random_state,
                                         max_depth=7,
-                                        max_features=7,
+                                        max_features="log2",
                                         verbose=0,
                                         warm_start=False)
 
+    rfecv = RFECV(estimator=classifier, step=1, cv=StratifiedKFold(3),
+                  scoring='f1_macro')
+
     print(classifier)
+    print(rfecv)
 
     # endregion
 
     # region Train Model and plot importance
 
-    classifier.fit(X_train, Y_train.ravel())
+    rfecv.fit(X_train, Y_train.ravel())
 
-    fig = plt.figure(figsize=(8, 12))
-    fig.patch.set_alpha(0.0)
-    ax = plt.gca()
-    ax.set_position([0.35, 0.05, 0.60, 0.9])
-
-    importance = classifier.feature_importances_
-    importance = pd.DataFrame(importance, index=pp.columns,
-                              columns=["Importance"]).sort_values(by=["Importance"])
-
-    importance["Std"] = np.std([tree.feature_importances_
-                                for tree in classifier.estimators_], axis=0)
-
-    x = range(importance.shape[0])
-    y = importance.iloc[:, 0]
-    yerr = importance.iloc[:, 1]
-    plt.barh(importance.index, y, align="center")
-    plt.xlabel("Relative Feature Importance", fontsize=8)
-    plt.xticks(fontsize=8)
-    plt.yticks(fontsize=8)
-    ax.xaxis.grid(True)
-    ax.set_axisbelow(True)
-    plt.title("Random Forest Feature Importance", fontsize=10)
-    plt.savefig("figures/feature_importance.svg")
+    rfecv.show()
+    
 
     # endregion
 
     # region Fit Model
 
-    train_predictions = classifier.predict(X_train)
+    train_predictions = rfecv.predict(X_train)
 
     training_error = np.sum(train_predictions == Y_train.ravel()) / len(
         X_train)
@@ -194,7 +173,7 @@ if label_type == "cat":
 
     # region Test Model
 
-    test_predictions = classifier.predict(X_test)
+    test_predictions = rfecv.predict(X_test)
 
     test_error = np.sum(test_predictions == Y_test.ravel()) / len(X_test)
 
@@ -228,7 +207,7 @@ if label_type == "cat":
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
     plt.title("Test")
-    plt.savefig("figures/confusion_matrix.svg")
+    plt.savefig("figures/confusion_matrix_rfecv.svg")
 
     plt.show()
 

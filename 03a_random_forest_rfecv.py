@@ -4,21 +4,17 @@ from fpl import fpl
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import StratifiedShuffleSplit
-from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from scipy.stats import mode
 import matplotlib.pyplot as plt
-from sklearn.feature_selection import RFE
+from sklearn.feature_selection import RFECV
+from sklearn.model_selection import StratifiedKFold
 import seaborn as sn
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 from sklearn.preprocessing import MinMaxScaler
 import random
-from sklearn.naive_bayes import GaussianNB
 from balanced_subsample import balanced_subsample
-from collections import Counter
-from sklearn.linear_model import LogisticRegressionCV
-from sklearn.linear_model import SGDClassifier
 
 random_state = 42
 np.random.seed(random_state)
@@ -139,66 +135,56 @@ if label_type == "cat":
                                         min_samples_leaf=1,
                                         min_samples_split=2,
                                         min_weight_fraction_leaf=0,
-                                        n_jobs=None,
+                                        n_jobs=-1,
                                         oob_score=False,
                                         random_state=random_state,
                                         max_depth=7,
-                                        max_features=7,
+                                        max_features="log2",
                                         verbose=0,
                                         warm_start=False)
 
+    rfecv = RFECV(estimator=classifier, step=1, cv=StratifiedKFold(3, random_state=random_state),
+                  scoring='f1_macro', n_jobs=-1)
+
     print(classifier)
+    print(rfecv)
 
     # endregion
 
     # region Train Model and plot importance
 
-    classifier.fit(X_train, Y_train.ravel())
+    rfecv.fit(X_train, Y_train.ravel())
 
-    fig = plt.figure(figsize=(8, 12))
+    # Plot number of features VS. cross-validation scores
+    print("Optimal number of features : %d" % rfecv.n_features_)
+    fig = plt.figure()
     fig.patch.set_alpha(0.0)
-    ax = plt.gca()
-    ax.set_position([0.35, 0.05, 0.60, 0.9])
+    plt.xlabel("Number of features selected")
+    plt.ylabel("Cross validation score (nb of correct classifications)")
+    plt.plot(range(1, len(rfecv.grid_scores_) + 1), rfecv.grid_scores_)
+    plt.savefig("figures/rfecv.svg")
 
-    importance = classifier.feature_importances_
-    importance = pd.DataFrame(importance, index=pp.columns,
-                              columns=["Importance"]).sort_values(by=["Importance"])
-
-    importance["Std"] = np.std([tree.feature_importances_
-                                for tree in classifier.estimators_], axis=0)
-
-    x = range(importance.shape[0])
-    y = importance.iloc[:, 0]
-    yerr = importance.iloc[:, 1]
-    plt.barh(importance.index, y, align="center")
-    plt.xlabel("Relative Feature Importance", fontsize=8)
-    plt.xticks(fontsize=8)
-    plt.yticks(fontsize=8)
-    ax.xaxis.grid(True)
-    ax.set_axisbelow(True)
-    plt.title("Random Forest Feature Importance", fontsize=10)
-    plt.savefig("figures/feature_importance.svg")
 
     # endregion
 
     # region Fit Model
 
-    train_predictions = classifier.predict(X_train)
+    train_predictions = rfecv.predict(X_train)
 
     training_error = np.sum(train_predictions == Y_train.ravel()) / len(
         X_train)
 
-    print(classification_report(train_predictions, Y_train, target_names=label_names))
+    print(classification_report(Y_train, train_predictions, target_names=label_names))
 
     # endregion
 
     # region Test Model
 
-    test_predictions = classifier.predict(X_test)
+    test_predictions = rfecv.predict(X_test)
 
     test_error = np.sum(test_predictions == Y_test.ravel()) / len(X_test)
 
-    print(classification_report(test_predictions, Y_test, target_names=label_names))
+    print(classification_report(Y_test, test_predictions, target_names=label_names))
 
     # endregion
 
@@ -228,7 +214,7 @@ if label_type == "cat":
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
     plt.title("Test")
-    plt.savefig("figures/confusion_matrix.svg")
+    plt.savefig("figures/confusion_matrix_rfecv.svg")
 
     plt.show()
 

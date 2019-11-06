@@ -17,6 +17,7 @@ spx = 3
 spy = 2
 
 fig, ax = plt.subplots(spy, spx, figsize=(10, 6))
+fig.patch.set_alpha(0.0)
 
 n_games = np.array([1, 2, 3, 4, 5, 5])
 sigma = np.array([np.inf, np.inf, 1.5, 1.5, 1.5, 3])
@@ -39,6 +40,6 @@ for i in range(0, spx*spy):
     if k == 0:
         plt.ylabel("Relative Weighting")
 
-plt.savefig("figures/form_filters.svg", transparent=True)
+plt.savefig("figures/form_filters.svg")
 
 plt.show()

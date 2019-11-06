@@ -154,7 +154,8 @@ if label_type == "cat":
 
     classifier.fit(X_train, Y_train.ravel())
 
-    plt.figure(figsize=(8, 12))
+    fig = plt.figure(figsize=(8, 12))
+    fig.patch.set_alpha(0.0)
     ax = plt.gca()
     ax.set_position([0.35, 0.05, 0.60, 0.9])
 
@@ -174,11 +175,7 @@ if label_type == "cat":
     ax.xaxis.grid(True)
     ax.set_axisbelow(True)
     plt.title("Random Forest Feature Importance")
-<<<<<<< HEAD
-    plt.savefig("figures/feature_importance.svg", transparent=True)
-=======
     plt.savefig("figures/feature_importance.svg")
->>>>>>> 65cbdec7b6f082e45b3f987e5d8f31b6716f23da
 
     # endregion
 
@@ -209,7 +206,8 @@ if label_type == "cat":
     train_cm_df = pd.DataFrame(train_cm, index=label_names,
                                columns=label_names)
 
-    plt.figure(figsize=(12, 5))
+    fig = plt.figure(figsize=(12, 5))
+    fig.patch.set_alpha(0.0)
     plt.subplot(1, 2, 1)
     sn.heatmap(train_cm_df, annot=True, fmt="d", robust=True, cmap="YlOrRd")
     plt.ylim(-0.5, 4.5)
@@ -229,8 +227,6 @@ if label_type == "cat":
     plt.xlabel('Predicted label')
     plt.title("Test")
     plt.savefig("figures/confusion_matrix.svg")
-
-    plt.savefig("figures/confusion_matrix.svg", transparent=True)
 
     plt.show()
 

@@ -2,15 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0e2b00ec-6848-431a-bf4c-561b0c4607e0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/03a_random_forest_rfecv.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/03a_random_forest_rfecv_yellowbrick.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/03_random_forest.py" beforeDir="false" afterPath="$PROJECT_DIR$/03_random_forest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/99_testing_scripts.py" beforeDir="false" afterPath="$PROJECT_DIR$/99_testing_scripts.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/figures/confusion_matrix.svg" beforeDir="false" afterPath="$PROJECT_DIR$/figures/confusion_matrix.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/figures/feature_importance.svg" beforeDir="false" afterPath="$PROJECT_DIR$/figures/feature_importance.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/figures/form_filters.svg" beforeDir="false" afterPath="$PROJECT_DIR$/figures/form_filters.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/form_convolution_filters.py" beforeDir="false" afterPath="$PROJECT_DIR$/form_convolution_filters.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/03a_random_forest_rfecv.py" beforeDir="false" afterPath="$PROJECT_DIR$/03a_random_forest_rfecv.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/confusion_matrix_rfecv.svg" beforeDir="false" afterPath="$PROJECT_DIR$/figures/confusion_matrix_rfecv.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/rfecv.svg" beforeDir="false" afterPath="$PROJECT_DIR$/figures/rfecv.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/fplml.html" beforeDir="false" afterPath="$PROJECT_DIR$/fplml.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -56,7 +51,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.form_convolution_filters">
+  <component name="RunManager" selected="Python.03a_random_forest_rfecv">
     <configuration name="03_random_forest" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="fpl" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -164,8 +159,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.form_convolution_filters" />
         <item itemvalue="Python.03a_random_forest_rfecv" />
+        <item itemvalue="Python.form_convolution_filters" />
         <item itemvalue="Python.99_testing_scripts" />
         <item itemvalue="Python.03a_random_forest_rfecv_yellowbrick" />
         <item itemvalue="Python.03_random_forest" />

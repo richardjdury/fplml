@@ -69,7 +69,27 @@ pp[num_cols] = scaler.fit_transform(pp[num_cols])
 
 # region Remove Correlated Features
 
+print(pp.shape)
+
 corr_matrix = pp.corr().abs()
+
+corr_cm_df = pd.DataFrame(corr_matrix, index=pp.columns,
+                          columns=pp.columns)
+
+fig = plt.figure(figsize=(12, 8))
+fig.patch.set_alpha(0.0)
+hm = sn.heatmap(corr_cm_df, annot=False, fmt="f", robust=True, cmap="YlOrRd")
+hm.set_xticks(np.arange(0, len(pp.columns))+0.5)
+hm.set_xticklabels(pp.columns)
+hm.set_yticks(np.arange(0, len(pp.columns))+0.5)
+hm.set_yticklabels(pp.columns)
+hm.tick_params(labelsize=6)
+hm.set_ylim(0, len(pp.columns))
+hm.set_position([0.25, 0.25, 0.5, 0.7])
+
+plt.savefig("figures/correlated_features.svg", bbox_inches='tight')
+
+plt.show()
 
 upper = corr_matrix.where(
     np.triu(np.ones(corr_matrix.shape), k=1).astype(np.bool))
@@ -77,6 +97,8 @@ upper = corr_matrix.where(
 to_drop = [column for column in upper.columns if any(upper[column] > 0.80)]
 
 pp = pp.drop(pp[to_drop], axis=1)
+
+print(pp.shape)
 
 # endregion
 
@@ -162,7 +184,7 @@ if label_type == "cat":
     plt.xlabel("Number of features selected")
     plt.ylabel("Cross validation score (nb of correct classifications)")
     plt.plot(range(1, len(rfecv.grid_scores_) + 1), rfecv.grid_scores_)
-    plt.savefig("figures/rfecv.svg")
+    plt.savefig("figures/rfecv.svg", bbox_inches='tight')
 
 
     # endregion
@@ -214,7 +236,7 @@ if label_type == "cat":
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
     plt.title("Test")
-    plt.savefig("figures/confusion_matrix_rfecv.svg")
+    plt.savefig("figures/confusion_matrix_rfecv.svg", bbox_inches='tight')
 
     plt.show()
 

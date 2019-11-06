@@ -128,10 +128,25 @@ if label_type == "cat":
 
     # region Define Classifier
 
-    classifier = RandomForestClassifier(n_estimators=1000,
+    classifier = RandomForestClassifier(bootstrap=True,
+                                        n_estimators=1000,
+                                        class_weight=None,
+                                        criterion="gini",
+                                        max_leaf_nodes=None,
+                                        min_impurity_decrease=0,
+                                        min_impurity_split=None,
+                                        min_samples_leaf=1,
+                                        min_samples_split=2,
+                                        min_weight_fraction_leaf=0,
+                                        n_jobs=None,
+                                        oob_score=False,
                                         random_state=random_state,
                                         max_depth=7,
-                                        max_features=7)
+                                        max_features=7,
+                                        verbose=0,
+                                        warm_start=False)
+
+    print(classifier)
 
     # endregion
 
@@ -158,6 +173,7 @@ if label_type == "cat":
     ax.xaxis.grid(True)
     ax.set_axisbelow(True)
     plt.title("Random Forest Feature Importance")
+    plt.savefig("figures/feature_importance.svg", transparent=True)
 
     # endregion
 
@@ -190,7 +206,7 @@ if label_type == "cat":
 
     plt.figure(figsize=(12, 5))
     plt.subplot(1, 2, 1)
-    sn.heatmap(train_cm_df, annot=True, fmt="d", robust=True)
+    sn.heatmap(train_cm_df, annot=True, fmt="d", robust=True, cmap="YlOrRd")
     plt.ylim(-0.5, 4.5)
     plt.xlim(-0.5, 4.5)
     plt.ylabel('True label')
@@ -201,14 +217,17 @@ if label_type == "cat":
     test_cm = confusion_matrix(Y_test, test_predictions)
     test_cm_df = pd.DataFrame(test_cm, index=label_names,
                               columns=label_names)
-    sn.heatmap(test_cm_df, annot=True, fmt="d", robust=True)
+    sn.heatmap(test_cm_df, annot=True, fmt="d", robust=True, cmap="YlOrRd")
     plt.ylim(-0.5, 4.5)
     plt.xlim(-0.5, 4.5)
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
     plt.title("Test")
 
+    plt.savefig("figures/confusion_matrix.svg", transparent=True)
+
     plt.show()
+
 
     # endregion
 
